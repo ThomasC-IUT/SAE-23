@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="styles/style_admin.css">
+    <title>Ajouter un batiment</title>
+</head>
+<body>
+    <h1>Ajouter un batiment dans la base de données</h1>
+    <form action="/php/add_bat.php" method="post">
+        <label for="id">ID_bat </label>
+        <input type="text" id="id" name="id" required><br><br>
+        
+		<label for="nom">Nom </label>
+        <select id="nom" name="nom" required>
+            <option value="RT">RT</option>
+            <option value="INF">INF</option>
+            <option value="RE">RE</option>
+            <option value="GIM">GIM</option>
+        </select><br><br>
+
+        <label for="login">Login </label>
+        <input type="text" id="login" name="login" required><br><br>
+
+        <label for="mdp">Mot de passe </label>
+        <input type="text" id="mdp" name="mdp" required><br><br>
+		
+        
+		<input class="in" type="submit" value="Ajouter">
+		
+		
+		<a href="accueil_admin.html">Retour</a>
+		
+		
+    </form>
+	
+	<div class="container">
+	<h3> Informations : </h3>
+	<p> ID_bat: Il s'agit de l'indicatif du batiment, par exemple : E, B, C</p>
+	
+	
+	<p>Nom : Nom du departement du batiment </p>
+	<p>login : Nom d'utilisateur du compte du gestionnaire du batiment </p>
+	
+	<p>Mot de passe: MDP du compte du gestionnaire</p>
+	
+	
+	</div>
+	
+	
+	
+</body>
+</html>

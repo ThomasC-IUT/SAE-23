@@ -32,7 +32,7 @@ if ($result->num_rows > 0) {
         echo "$row[motdepasse]";
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $user;
-        header("Location: ../html/admin.html");
+        header("Location: /accueil_admin.html");
         exit();
     } else {
         echo "Mot de passe incorrect.";
