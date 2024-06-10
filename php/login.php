@@ -1,45 +1,44 @@
-<?php
-session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "passsae";
-$dbname = "sae23";
+<?php session_start();
 
+include 'connect.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = connect();
 
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-
+//get the information of the form
 $user = $_POST['username'];
 $pass = md5($_POST['password']);
 
-// Préparer et exécuter la requête SQL
-$sql = "SELECT * FROM Administration WHERE login='$user'";
-$result = $conn->query($sql);
+// Prepare the sql request 
+$sql = "SELECT * FROM administration WHERE login='$user'";
+
+//storing the result 
+$result = mysqli_query($conn, $sql);
 
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-   
-    // Vérifier le mot de passe
+if(mysqli_num_rows($result) > 0) {  
+//each line of the DB is put in an associative table
+  $row = mysqli_fetch_assoc($result);
+    
+// Check the password
     if ($pass == $row['motdepasse']) {
-        // Mot de passe correct, créer une session
+        // password ok, creating a session
         echo "$row[motdepasse]";
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $user;
+		//redirecting the user
         header("Location: /accueil_admin.html");
         exit();
-    } else {
+    } 
+	else {
         echo "Mot de passe incorrect.";
     }
-} else {
-    echo "Nom d'utilisateur incorrect.";
+} 
+
+else {
+echo "Nom d'utilisateur incorrect.";
 }
 
-$conn->close();
+mysqli_close($conn);
 ?>
