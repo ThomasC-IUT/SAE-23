@@ -8,10 +8,13 @@ $conn = connect();
 
 //get the information of the form
 $user = $_POST['username'];
-$pass = md5($_POST['password']);
+//$pass = md5($_POST['password']);
+$pass = ($_POST['password']);
+
+
 
 // Prepare the sql request 
-$sql = "SELECT * FROM administration WHERE login='$user'";
+$sql = "SELECT * FROM batiment WHERE login='$user'";
 
 //storing the result 
 $result = mysqli_query($conn, $sql);
@@ -27,8 +30,10 @@ if(mysqli_num_rows($result) > 0) {
         echo "$row[motdepasse]";
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $user;
+		$_SESSION['ID_bat'] = $row['ID_bat'];
+
 		//redirecting the user
-        header("Location: /accueil_admin.html");
+        header("Location: batiment.php?id=" . $row['ID_bat']);
         exit();
     } 
 	else {
