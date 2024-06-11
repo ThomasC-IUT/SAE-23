@@ -58,7 +58,7 @@ mysqli_close($conn);
 		<label for="type">Type </label>
         <select id="type" name="type" required>
             <option value="temperature">Temperature</option>
-            <option value="CO2">CO2</option>
+            <option value="co2">co2</option>
             
         </select><br><br>
         

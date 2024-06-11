@@ -50,16 +50,10 @@ while (true) {
 
 			$value = $arr[0][$j];
 
-			echo "$devname";
-			echo "$value";
-			echo "${devName}";
-			echo "$j";
-
 			// Insert data into the database
-			$requete = "INSERT INTO mesure (`date`, `horaire`, `valeur`, `NOM_capteur`) VALUES ($date, $heure, $j, '${devName}')";
+			$requete = "INSERT INTO `mesure` (`date`, `horaire`, `valeur`, `NOM_capteur`) VALUES ($date, $heure, $j, '${devName}')";
 			mysqli_query($id_bd, $requete)
 		    	or die("Execution de la requete impossible : $requete");
-			echo mysqli_error($id_bd);
 
 
 
@@ -68,4 +62,3 @@ while (true) {
 }
 mysqli_close($id_bd);
 ?>
-
