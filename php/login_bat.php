@@ -8,6 +8,7 @@ $conn = connect();
 
 //get the information of the form
 $user = $_POST['username'];
+
 //$pass = md5($_POST['password']);
 $pass = ($_POST['password']);
 
