@@ -16,6 +16,8 @@ while (true) {
 		// Access to the type of value for one room
 		$sql_val = "SELECT type FROM capteur WHERE NOM_capteur = $tab[$i]";
 		$result_val = mysqli_query($id_bd, $sql_val);
+
+		$val = mysqli_fetch_array($result_val);
 		
 		// Subscribe to MQTT topic and get data
 		$json = shell_exec("mosquitto_sub -h mqtt.iut-blagnac.fr -t AM107/by-room/$NOM_salle/data -C 1");
@@ -31,7 +33,6 @@ while (true) {
 		$requete = "INSERT INTO `mesure` (`date`, `horaire`, `valeur`, `NOM_capteur`) VALUES ($date, $heure, $value, '${devName}')";
 		mysqli_query($id_bd, $requete)
 		    or die("Execution de la requete impossible : $requete");
-		$val = mysqli_fetch_array($result_val);
 
 		//for loop to insert data for the type of value
 
