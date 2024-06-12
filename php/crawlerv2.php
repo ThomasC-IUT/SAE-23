@@ -6,56 +6,40 @@ $id_bd = mysqli_connect("localhost", "root", "passsae", "sae23")
 while (true) {
     $sql = "SELECT DISTINCT NOM_salle FROM capteur";
     $result = mysqli_query($id_bd, $sql);
-    
-    if (!$result) {
-        die("Erreur lors de l'exécution de la requête : " . mysqli_error($id_bd));
-    }
 
-    // Fetch all room names
-    $rooms = array();
     while ($row = mysqli_fetch_assoc($result)) {
-        $rooms[] = $row['NOM_salle'];
-    }
-    
-    foreach ($rooms as $nom_salle) {
-        // Fetch distinct sensor types for each room
-        $sql_val = "SELECT type FROM capteur WHERE NOM_capteur = '$nom_salle'";
+        $NOM_salle = $row['NOM_salle'];
+        $sql_val = "SELECT type, NOM_capteur FROM capteur WHERE NOM_salle = '$NOM_salle'";
         $result_val = mysqli_query($id_bd, $sql_val);
-        
-        if (!$result_val) {
-            die("Erreur lors de l'exécution de la requête : " . mysqli_error($id_bd));
-        }
 
-        while ($type_row = mysqli_fetch_assoc($result_val)) {
-            $type = $type_row['type'];
+        while ($val = mysqli_fetch_assoc($result_val)) {
+            $type = $val['type'];
+            $NOM_capteur = $val['NOM_capteur'];
             
             // Subscribe to MQTT topic and get data
-            $json = shell_exec("mosquitto_sub -h mqtt.iut-blagnac.fr -t AM107/by-room/$nom_salle/data -C 1");
+            $json = shell_exec("mosquitto_sub -h mqtt.iut-blagnac.fr -t AM107/by-room/$NOM_salle/data -C 1");
             $arr = json_decode($json, true);
             
-            if ($arr) {
+            if (is_array($arr) && isset($arr[1]["deviceName"], $arr[0][$type])) {
                 // Prepare data for insertion
                 $date = date('Y-m-d');
                 $heure = date("H:i:s");
-                
-                $devName = $arr['deviceName'] . $type;
-                $value = isset($arr[$type]) ? $arr[$type] : 0; // Ensure $value is set even if the key does not exist
-                
+                $devName = $arr[1]["deviceName"] . $type;
+                $value = $arr[0][$type];
+
                 // Insert data into the database
-                $requete = "INSERT INTO mesure (`date`, `horaire`, `valeur`, `NOM_capteur`) VALUES ('$date', '$heure', $value, '$devName')";
-                $insert_result = mysqli_query($id_bd, $requete);
-                
-                if (!$insert_result) {
-                    echo "Execution de la requete impossible : " . mysqli_error($id_bd);
-                }
+                $requete = "INSERT INTO mesure (`date`, `horaire`, `valeur`, `NOM_capteur`) 
+                            VALUES ('$date', '$heure', '$value', '$devName')";
+                mysqli_query($id_bd, $requete) or die("Execution de la requete impossible : $requete");
             } else {
-                echo "Erreur lors de la réception des données MQTT pour $nom_salle";
+                // Handle error or log if the expected data structure is not found
+                echo "Erreur: données MQTT inattendues pour $NOM_salle";
             }
         }
     }
-    
-    // Sleep for a while to avoid overwhelming the server
-    sleep(10);
+
+    // Sleep for a while to prevent continuous execution
+    sleep(60); // Sleep for 60 seconds before next iteration
 }
 
 mysqli_close($id_bd);
