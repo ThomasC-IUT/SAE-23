@@ -47,7 +47,11 @@ ul {
     justify-content: center;
   }
 
-  .gestion {
+  .end {
+    margin-bottom: 50px;
+  }
+
+  .gestion ,.text {
     margin: 0 10em ;
   }
 
