@@ -1,7 +1,7 @@
 <?php
 function connect()
 {$servername = "localhost";
-$username = "root";
+$username = "lampp";
 $password = "passsae";
 $dbname = "sae23";
 

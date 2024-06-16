@@ -10,6 +10,7 @@ while (true) {
 	$result = mysqli_query($id_bd, $sql);
 	// transform the result of the request to an array
 	$tab = mysqli_fetch_array($result);
+	echo "$tab";
 
 	// for loop to insert data for each room
 	for ($i = 0; $i <= count($tab); $i++) {
@@ -20,7 +21,7 @@ while (true) {
 		$val = mysqli_fetch_array($result_val);
 		
 		// Subscribe to MQTT topic and get data
-		$json = shell_exec("mosquitto_sub -h mqtt.iut-blagnac.fr -t AM107/by-room/$NOM_salle/data -C 1");
+		$json = shell_exec("mosquitto_sub -h mqtt.iut-blagnac.fr -t AM107/by-room/$tab[i]/data -C 1");
 		$arr = json_decode($json, true);
 
 		// Prepare data for insertion
